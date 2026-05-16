@@ -9,7 +9,7 @@ I built it for practical reasons and to gain more hands-on experience
 ## Technologies Used
 Java, BurpSuite, Montoya Api, Maven
 
-### Project parts
+### Project Structure
 **ScopeHighlighter** - entry point (when Burp loads a JAR file it searches for a class that
 implements BurpExtension and calls **initialize**. The whole setup starts and connects here - the ScopeManager 
 is created, UI tabs and HTTP handlers are registered here)
@@ -21,3 +21,12 @@ is created, UI tabs and HTTP handlers are registered here)
 **HttpHandlerImpl** - (Burp calls this every time an HTTP request passes through the proxy. It takes the request path,
 asks **ScopeManager** if the request is in the scope, if the answer is true then the request is highlighted in green 
 with the "IN SCOPE" comment)
+
+**ScopeTab** - UI component (extends JPanel which is a Swing component that Burp accepts as a tab.
+Contains a text area where you paste endpoints one per line, and a Load Scope button that reads
+the text, splits it by lines and adds each endpoint to ScopeManager)
+
+## How it works - Testing
+Extension was tested on TryHackMe. After loading endpoints into the Scope tab,
+all new requests matching the scope were highlighted green with "IN SCOPE" comment
+in Proxy → HTTP history. Prefix matching was used so /api/ matches all /api/v2/... endpoints.
