@@ -25,12 +25,20 @@ public class ScopeManager {
         return scopeList;
     }
     public void addEndpoint(String endpoint){
-        scopeList.add(endpoint);
-        montoyaApi.persistence().preferences().setString("scope", String.join("\n", scopeList));
+        if(!scopeList.contains(endpoint)) {
+            scopeList.add(endpoint);
+            montoyaApi.persistence().preferences().setString("scope", String.join("\n", scopeList));
+        }
 
     }
-    public boolean isInScope(String path){
-        return scopeList.stream().anyMatch(endpoint -> path.startsWith(endpoint));
+    public boolean isInScope(String path,String method){
+        return scopeList.stream().anyMatch(endpoint -> {
+            String[] parts = endpoint.split(" ",2);
+            if(parts.length<2) return false;
+            String scopeMetho = parts[0];
+            String scopePath = parts[1];
+            return path.startsWith(scopePath) && method.equals(scopeMetho);
+        });
     }
     public boolean shouldSendToRepeater(String path){
         if(!sentToRepeater.contains(path)){
