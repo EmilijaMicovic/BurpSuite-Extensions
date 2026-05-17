@@ -30,3 +30,17 @@ the text, splits it by lines and adds each endpoint to ScopeManager)
 Extension was tested on TryHackMe. After loading endpoints into the Scope tab,
 all new requests matching the scope were highlighted green with "IN SCOPE" comment
 in Proxy → HTTP history. Prefix matching was used so /api/ matches all /api/v2/... endpoints.
+
+## New Features Added
+**Repeater Integration** - When a new in-scope endpoint is detected for the first time,
+it is automatically sent to a Repeater tab named after the endpoint and highlighted red.
+Repeated endpoints stay green.
+
+**Scope Persistence** - Scope list is now saved between Burp sessions using Montoya persistence API.
+
+**Scope List Management** - Added a dialog to view, remove selected, or clear all endpoints from scope.
+
+**HTTP Method Support** - Scope entries now include HTTP method (e.g. GET /api/v1/user,
+POST /api/v1/login). Extension matches both method and path when checking if a request is in scope.
+
+**Duplicate Prevention** - Added check in addEndpoint to prevent adding the same endpoint twice.
