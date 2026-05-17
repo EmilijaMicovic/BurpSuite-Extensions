@@ -39,8 +39,37 @@ public class ScopeTab extends JPanel {
     }
 
     private void showList() {
-        String list = String.join("\n", scopeManager.getScopeList());
-        JOptionPane.showMessageDialog(this, list.isEmpty() ? "Scope is empty!" : list);
+        JDialog dialog = new JDialog();
+        dialog.setTitle("Scope List");
+        dialog.setSize(400, 300);
+        dialog.setLayout(new BorderLayout());
+
+        DefaultListModel<String> listModel = new DefaultListModel<>();
+        scopeManager.getScopeList().forEach(listModel::addElement);
+        JList<String> list = new JList<>(listModel);
+
+        JButton removeButton = new JButton("Remove Selected");
+        removeButton.addActionListener(e -> {
+            String selected = list.getSelectedValue();
+            if (selected != null) {
+                scopeManager.removeEndpoint(selected);
+                listModel.removeElement(selected);
+            }
+        });
+
+        JButton clearButton = new JButton("Clear All");
+        clearButton.addActionListener(e -> {
+            scopeManager.clearAll();
+            listModel.clear();
+        });
+
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.add(removeButton);
+        buttonPanel.add(clearButton);
+
+        dialog.add(new JScrollPane(list), BorderLayout.CENTER);
+        dialog.add(buttonPanel, BorderLayout.SOUTH);
+        dialog.setVisible(true);
     }
 
 }

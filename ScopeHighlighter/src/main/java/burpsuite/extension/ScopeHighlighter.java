@@ -6,7 +6,7 @@ public class ScopeHighlighter implements BurpExtension{
     @Override
     public void initialize(MontoyaApi montoyaApi) {
         montoyaApi.extension().setName("Scope Highlighte");
-        ScopeManager scopeManager = new ScopeManager();
+        ScopeManager scopeManager = new ScopeManager(montoyaApi);
         ScopeTab  scopeTab = new ScopeTab(scopeManager);
         HttpHandlerImpl httpHandlerImpl = new HttpHandlerImpl(montoyaApi, scopeManager);
 

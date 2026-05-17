@@ -16,9 +16,17 @@ public class HttpHandlerImpl implements HttpHandler {
 
     @Override
     public RequestToBeSentAction handleHttpRequestToBeSent(HttpRequestToBeSent httpRequestToBeSent) {
-        String path = httpRequestToBeSent.path();
+        String path = httpRequestToBeSent.path().split("\\?")[0];
+        String[] parts = path.split("/");
+        String tabName = "/" + (parts.length > 1 ? parts[1] : "") +
+                (parts.length > 2 ? "/" + parts[2] : "");
         montoyaApi.logging().logToOutput("Path: " + httpRequestToBeSent.path());
         if(scopeManager.isInScope(path)) {
+            if(scopeManager.shouldSendToRepeater(path)){
+                montoyaApi.repeater().sendToRepeater(httpRequestToBeSent,tabName);
+                return RequestToBeSentAction.continueWith(httpRequestToBeSent, Annotations.annotations("IN SCOPE - NEW", HighlightColor.RED));
+
+            }
             return RequestToBeSentAction.continueWith(httpRequestToBeSent, Annotations.annotations("IN SCOPE", HighlightColor.GREEN));
         }
         return RequestToBeSentAction.continueWith(httpRequestToBeSent);
