@@ -15,19 +15,32 @@ public class ScopeTab extends JPanel {
         textArea.setToolTipText("Enter endpoints, one per line");
 
         JButton loadButton = new JButton("Load Scope");
-        loadButton.addActionListener(e->loadScope());
+        loadButton.addActionListener(e -> loadScope());
+
+        JButton showListButton = new JButton("Show Scope List");
+        showListButton.addActionListener(e -> showList());
+
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.add(loadButton);
+        buttonPanel.add(showListButton);
 
         add(new JScrollPane(textArea), BorderLayout.CENTER);
-        add(loadButton,BorderLayout.SOUTH);
+        add(buttonPanel, BorderLayout.SOUTH);
     }
 
-    private void loadScope(){
+    private void loadScope() {
         String[] lines = textArea.getText().split("\n");
-        for(String line : lines){
-            if(!line.trim().isEmpty()){
+        for (String line : lines) {
+            if (!line.trim().isEmpty()) {
                 scopeManager.addEndpoint(line.trim());
             }
         }
-        JOptionPane.showMessageDialog(this,"Scope loaded: " + scopeManager.getScopeList().size() + "endpoints");
+        JOptionPane.showMessageDialog(this, "Scope loaded: " + scopeManager.getScopeList().size() + " endpoints");
     }
+
+    private void showList() {
+        String list = String.join("\n", scopeManager.getScopeList());
+        JOptionPane.showMessageDialog(this, list.isEmpty() ? "Scope is empty!" : list);
+    }
+
 }
